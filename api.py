@@ -47,5 +47,5 @@ async def converter_numero(numero: int):
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))
-    host = os.getenv("HOST", "localhost")
+    host = os.getenv("HOST", "0.0.0.0")  # Use "0.0.0.0" para aceitar conexões externas
     uvicorn.run("api:app", host=host, port=port) 
