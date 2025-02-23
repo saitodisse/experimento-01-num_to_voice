@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Números por Extenso</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+            color: #666;
+        }
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+        #resultado {
+            padding: 15px;
+            border-radius: 5px;
+            background-color: #f8f9fa;
+            min-height: 50px;
+            font-size: 18px;
+            color: #333;
+        }
+        .error {
+            color: #dc3545;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Conversor de Números por Extenso</h1>
+        <div class="input-group">
+            <label for="numero">Digite um número (entre 0 e 999.999.999):</label>
+            <input type="number" id="numero" name="numero" placeholder="Digite um número..." min="0" max="999999999">
+        </div>
+        <div id="resultado"></div>
+    </div>
+
+    <script>
+        const numeroInput = document.getElementById('numero');
+        const resultadoDiv = document.getElementById('resultado');
+        let timeoutId;
+
+        numeroInput.addEventListener('input', function() {
+            // Limpa o timeout anterior
+            clearTimeout(timeoutId);
+            
+            // Define um novo timeout
+            timeoutId = setTimeout(async function() {
+                const numero = numeroInput.value;
+                
+                // Verifica se o campo está vazio
+                if (!numero) {
+                    resultadoDiv.textContent = '';
+                    return;
+                }
+
+                try {
+                    const response = await fetch(`/converter/${numero}`);
+                    const data = await response.json();
+                    
+                    if (response.ok) {
+                        resultadoDiv.textContent = data.extenso;
+                        resultadoDiv.classList.remove('error');
+                    } else {
+                        resultadoDiv.textContent = data.detail.error || 'Erro ao converter o número';
+                        resultadoDiv.classList.add('error');
+                    }
+                } catch (error) {
+                    resultadoDiv.textContent = 'Erro ao se comunicar com o servidor';
+                    resultadoDiv.classList.add('error');
+                }
+            }, 300); // Aguarda 300ms após o último input antes de fazer a requisição
+        });
+    </script>
+</body>
+</html> 
