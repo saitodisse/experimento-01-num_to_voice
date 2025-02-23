@@ -264,6 +264,28 @@ def number_to_words(number):
         9: "novecentos"
     }
 
+    def converter_grupo(numero):
+        if numero == 0:
+            return ""
+        elif numero == 100:
+            return "cem"
+        elif numero <= 9:
+            return unidades[numero]
+        elif numero <= 19:
+            return especiais[numero]
+        elif numero <= 99:
+            dezena = numero // 10
+            unidade = numero % 10
+            if unidade == 0:
+                return dezenas[dezena]
+            return f"{dezenas[dezena]} e {unidades[unidade]}"
+        else:  # 100-999
+            centena = numero // 100
+            resto = numero % 100
+            if resto == 0:
+                return centenas[centena]
+            return f"{centenas[centena]} e {converter_grupo(resto)}"
+
     # Tratamento de números negativos
     if number < 0:
         return "menos " + number_to_words(abs(number))
@@ -282,24 +304,43 @@ def number_to_words(number):
                 resultado += " " + unidades[int(digito)]
         return resultado
 
-    # Caso especial para 100
-    if number == 100:
-        return "cem"
+    if number == 0:
+        return "zero"
 
-    # Números inteiros
-    if number <= 9:
-        return unidades[number]
-    elif number <= 19:
-        return especiais[number]
-    elif number <= 99:
-        dezena = number // 10
-        unidade = number % 10
-        if unidade == 0:
-            return dezenas[dezena]
-        return f"{dezenas[dezena]} e {unidades[unidade]}"
-    else:  # 100-999
-        centena = number // 100
-        resto = number % 100
-        if resto == 0:
-            return centenas[centena]
-        return f"{centenas[centena]} e {number_to_words(resto)}" 
+    # Separar em grupos de três dígitos
+    milhoes = number // 1000000
+    milhares = (number % 1000000) // 1000
+    centenas = number % 1000
+
+    resultado = []
+
+    # Processar milhões
+    if milhoes > 0:
+        if milhoes == 1:
+            resultado.append("um milhão")
+        else:
+            resultado.append(f"{converter_grupo(milhoes)} milhões")
+
+    # Processar milhares
+    if milhares > 0:
+        if milhares == 1:
+            resultado.append("mil")
+        else:
+            resultado.append(f"{converter_grupo(milhares)} mil")
+
+    # Processar centenas
+    if centenas > 0:
+        resultado.append(converter_grupo(centenas))
+
+    # Juntar as partes com os conectivos apropriados
+    if len(resultado) == 0:
+        return "zero"
+    elif len(resultado) == 1:
+        return resultado[0]
+    elif len(resultado) == 2:
+        # Regras especiais para o "e"
+        if len(resultado[1]) <= 2 or resultado[1] == "cem":
+            return f"{resultado[0]} e {resultado[1]}"
+        return f"{resultado[0]} {resultado[1]}"
+    else:
+        return f"{resultado[0]} {resultado[1]} e {resultado[2]}" 

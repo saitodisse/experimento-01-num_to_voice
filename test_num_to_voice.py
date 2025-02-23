@@ -256,5 +256,23 @@ class TestNumberToWords(unittest.TestCase):
         self.assertEqual(number_to_words(-1.1), "menos um vírgula um")
         self.assertEqual(number_to_words(10.01), "dez vírgula zero um")
 
+    def test_milhares(self):
+        self.assertEqual(number_to_words(1000), "mil")
+        self.assertEqual(number_to_words(1001), "mil e um")
+        self.assertEqual(number_to_words(1100), "mil e cem")
+        self.assertEqual(number_to_words(1101), "mil cento e um")
+        self.assertEqual(number_to_words(2000), "dois mil")
+        self.assertEqual(number_to_words(10000), "dez mil")
+        self.assertEqual(number_to_words(100000), "cem mil")
+        self.assertEqual(number_to_words(999999), "novecentos e noventa e nove mil novecentos e noventa e nove")
+
+    def test_milhoes(self):
+        self.assertEqual(number_to_words(1000000), "um milhão")
+        self.assertEqual(number_to_words(2000000), "dois milhões")
+        self.assertEqual(number_to_words(1000001), "um milhão e um")
+        self.assertEqual(number_to_words(1000100), "um milhão e cem")
+        self.assertEqual(number_to_words(1100000), "um milhão e cem mil")
+        self.assertEqual(number_to_words(999999999), "novecentos e noventa e nove milhões novecentos e noventa e nove mil novecentos e noventa e nove")
+
 if __name__ == '__main__':
     unittest.main() 
