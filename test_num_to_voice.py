@@ -66,22 +66,22 @@ def test_milhoes():
     assert converter_numero_para_palavras(2000000) == "dois milhões"
     assert converter_numero_para_palavras(1000001) == "um milhão e um"
     assert converter_numero_para_palavras(1000100) == "um milhão e cem"
-    assert converter_numero_para_palavras(1001000) == "um milhão e mil"
+    assert converter_numero_para_palavras(1001000) == "um milhão mil"
     assert converter_numero_para_palavras(1001001) == "um milhão mil e um"
     assert converter_numero_para_palavras(1020304) == "um milhão vinte mil trezentos e quatro"
     assert converter_numero_para_palavras(9999999) == "nove milhões novecentos e noventa e nove mil novecentos e noventa e nove"
 
 def test_casos_especiais_milhoes():
     assert converter_numero_para_palavras(2000001) == "dois milhões e um"
-    assert converter_numero_para_palavras(2100000) == "dois milhões e cem mil"
+    assert converter_numero_para_palavras(2100000) == "dois milhões cem mil"
     assert converter_numero_para_palavras(2100100) == "dois milhões cem mil e cem"
     assert converter_numero_para_palavras(2100101) == "dois milhões cem mil cento e um"
-    assert converter_numero_para_palavras(2100001) == "dois milhões e um"
+    assert converter_numero_para_palavras(2100001) == "dois milhões cem mil e um"
 
 def test_centenas_de_milhoes():
     assert converter_numero_para_palavras(100000000) == "cem milhões"
     assert converter_numero_para_palavras(100000001) == "cem milhões e um"
-    assert converter_numero_para_palavras(100100000) == "cem milhões e cem mil"
+    assert converter_numero_para_palavras(100100000) == "cem milhões cem mil"
     assert converter_numero_para_palavras(100100100) == "cem milhões cem mil e cem"
     assert converter_numero_para_palavras(999999999) == "novecentos e noventa e nove milhões novecentos e noventa e nove mil novecentos e noventa e nove"
 

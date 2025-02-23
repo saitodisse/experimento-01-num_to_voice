@@ -67,26 +67,22 @@ def converter_numero_para_palavras(numero):
         partes.append(converter_grupo_de_tres(centenas))
 
     # Juntar as partes com os conectivos apropriados
-    if len(partes) == 1:
+    if len(partes) == 0:
+        return "zero"
+    elif len(partes) == 1:
         return partes[0]
     elif len(partes) == 2:
         # Se a segunda parte for menor que 100 ou for exatamente 100, usa "e"
-        if (partes[0].endswith("milhão") or partes[0].endswith("milhões")) and \
-           (partes[1] == "mil" or partes[1].endswith(" mil")):
+        if (len(partes[1]) <= 3 or partes[1] == "cem") and not "mil" in partes[1]:
             return f"{partes[0]} e {partes[1]}"
-        elif partes[1] == "cem" or (len(partes[1]) <= 3 or partes[1].startswith("dez") or \
-             partes[1].startswith("onze") or partes[1].startswith("doze") or \
-             partes[1].startswith("treze") or partes[1].startswith("quatorze") or \
-             partes[1].startswith("quinze") or partes[1].startswith("dezesseis") or \
-             partes[1].startswith("dezessete") or partes[1].startswith("dezoito") or \
-             partes[1].startswith("dezenove")):
-            return f"{partes[0]} e {partes[1]}"
-        else:
+        # Se a primeira parte termina com "mil", não usa "e"
+        elif "mil" in partes[0]:
             return f"{partes[0]} {partes[1]}"
+        else:
+            return f"{partes[0]} e {partes[1]}"
     else:  # len(partes) == 3
-        if milhares == 0:
-            return f"{partes[0]} e {partes[2]}"
-        elif centenas < 100 or centenas == 100:
+        # Se a última parte for menor que 100 ou for exatamente 100, usa "e"
+        if len(partes[2]) <= 3 or partes[2] == "cem":
             return f"{partes[0]} {partes[1]} e {partes[2]}"
         else:
             return f"{partes[0]} {partes[1]} {partes[2]}"
