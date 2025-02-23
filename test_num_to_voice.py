@@ -1,5 +1,8 @@
 import pytest
 from num_to_voice import converter_numero_para_palavras
+import unittest
+from num_to_voice import num_to_voice
+from num_to_voice import number_to_words
 
 def test_zero():
     assert converter_numero_para_palavras(0) == "zero"
@@ -93,4 +96,165 @@ def test_numeros_invalidos():
     with pytest.raises(ValueError):
         converter_numero_para_palavras(3.14)  # teste com float
     with pytest.raises(ValueError):
-        converter_numero_para_palavras("123")  # teste com string 
+        converter_numero_para_palavras("123")  # teste com string
+
+class TestNumToVoice(unittest.TestCase):
+    def test_numeros_basicos(self):
+        casos_teste = {
+            0: "zero",
+            1: "um",
+            2: "dois",
+            3: "três",
+            4: "quatro",
+            5: "cinco",
+            6: "seis",
+            7: "sete",
+            8: "oito",
+            9: "nove",
+            10: "dez",
+            11: "onze",
+            12: "doze",
+            13: "treze",
+            14: "quatorze",
+            15: "quinze",
+            16: "dezesseis",
+            17: "dezessete",
+            18: "dezoito",
+            19: "dezenove",
+            20: "vinte"
+        }
+        
+        for numero, esperado in casos_teste.items():
+            with self.subTest(numero=numero):
+                self.assertEqual(num_to_voice(numero), esperado)
+                
+    def test_dezenas(self):
+        casos_teste = {
+            30: "trinta",
+            40: "quarenta",
+            50: "cinquenta",
+            60: "sessenta",
+            70: "setenta",
+            80: "oitenta",
+            90: "noventa",
+            21: "vinte e um",
+            35: "trinta e cinco",
+            48: "quarenta e oito",
+            99: "noventa e nove"
+        }
+        
+        for numero, esperado in casos_teste.items():
+            with self.subTest(numero=numero):
+                self.assertEqual(num_to_voice(numero), esperado)
+                
+    def test_centenas(self):
+        casos_teste = {
+            100: "cem",
+            101: "cento e um",
+            110: "cento e dez",
+            111: "cento e onze",
+            199: "cento e noventa e nove",
+            200: "duzentos",
+            201: "duzentos e um",
+            300: "trezentos",
+            400: "quatrocentos",
+            500: "quinhentos",
+            600: "seiscentos",
+            700: "setecentos",
+            800: "oitocentos",
+            900: "novecentos",
+            999: "novecentos e noventa e nove"
+        }
+        
+        for numero, esperado in casos_teste.items():
+            with self.subTest(numero=numero):
+                self.assertEqual(num_to_voice(numero), esperado)
+
+    def test_numeros_negativos(self):
+        casos_teste = {
+            -1: "menos um",
+            -10: "menos dez",
+            -15: "menos quinze",
+            -20: "menos vinte",
+            -21: "menos vinte e um",
+            -100: "menos cem",
+            -101: "menos cento e um",
+            -999: "menos novecentos e noventa e nove"
+        }
+        
+        for numero, esperado in casos_teste.items():
+            with self.subTest(numero=numero):
+                self.assertEqual(num_to_voice(numero), esperado)
+
+    def test_numeros_decimais(self):
+        casos_teste = {
+            0.5: "zero vírgula cinco",
+            1.0: "um",
+            1.1: "um vírgula um",
+            1.23: "um vírgula vinte e três",
+            10.01: "dez vírgula zero um",
+            100.001: "cem vírgula zero zero um",
+            -1.5: "menos um vírgula cinco",
+            -10.05: "menos dez vírgula zero cinco",
+            0.01: "zero vírgula zero um",
+            0.001: "zero vírgula zero zero um"
+        }
+        
+        for numero, esperado in casos_teste.items():
+            with self.subTest(numero=numero):
+                self.assertEqual(num_to_voice(numero), esperado)
+
+class TestNumberToWords(unittest.TestCase):
+    def test_unidades(self):
+        self.assertEqual(number_to_words(0), "zero")
+        self.assertEqual(number_to_words(1), "um")
+        self.assertEqual(number_to_words(2), "dois")
+        self.assertEqual(number_to_words(3), "três")
+        self.assertEqual(number_to_words(4), "quatro")
+        self.assertEqual(number_to_words(5), "cinco")
+        self.assertEqual(number_to_words(6), "seis")
+        self.assertEqual(number_to_words(7), "sete")
+        self.assertEqual(number_to_words(8), "oito")
+        self.assertEqual(number_to_words(9), "nove")
+
+    def test_dezenas(self):
+        self.assertEqual(number_to_words(10), "dez")
+        self.assertEqual(number_to_words(11), "onze")
+        self.assertEqual(number_to_words(12), "doze")
+        self.assertEqual(number_to_words(13), "treze")
+        self.assertEqual(number_to_words(14), "quatorze")
+        self.assertEqual(number_to_words(15), "quinze")
+        self.assertEqual(number_to_words(16), "dezesseis")
+        self.assertEqual(number_to_words(17), "dezessete")
+        self.assertEqual(number_to_words(18), "dezoito")
+        self.assertEqual(number_to_words(19), "dezenove")
+        self.assertEqual(number_to_words(20), "vinte")
+
+    def test_dezenas_compostas(self):
+        self.assertEqual(number_to_words(21), "vinte e um")
+        self.assertEqual(number_to_words(35), "trinta e cinco")
+        self.assertEqual(number_to_words(48), "quarenta e oito")
+        self.assertEqual(number_to_words(99), "noventa e nove")
+
+    def test_centenas(self):
+        self.assertEqual(number_to_words(100), "cem")
+        self.assertEqual(number_to_words(101), "cento e um")
+        self.assertEqual(number_to_words(110), "cento e dez")
+        self.assertEqual(number_to_words(199), "cento e noventa e nove")
+        self.assertEqual(number_to_words(200), "duzentos")
+        self.assertEqual(number_to_words(999), "novecentos e noventa e nove")
+
+    def test_numeros_negativos(self):
+        self.assertEqual(number_to_words(-1), "menos um")
+        self.assertEqual(number_to_words(-15), "menos quinze")
+        self.assertEqual(number_to_words(-20), "menos vinte")
+        self.assertEqual(number_to_words(-99), "menos noventa e nove")
+
+    def test_numeros_decimais(self):
+        self.assertEqual(number_to_words(1.5), "um vírgula cinco")
+        self.assertEqual(number_to_words(0.1), "zero vírgula um")
+        self.assertEqual(number_to_words(-1.1), "menos um vírgula um")
+        self.assertEqual(number_to_words(10.01), "dez vírgula zero um")
+
+if __name__ == '__main__':
+    unittest.main() 
