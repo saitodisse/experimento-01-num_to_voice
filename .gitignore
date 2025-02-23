@@ -1,0 +1,14 @@
+# gitignore for python project
+*.pyc
+*.pyo
+*.pyd
+*.pyw
+*.pyz
+*.pywz
+# folders
+__pycache__
+.pytest_cache
+*.pytest_cache
+*.pytest_cache/*
+*.pytest_cache/
+venv
