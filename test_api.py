@@ -1,29 +1,47 @@
-import pytest
-from fastapi.testclient import TestClient
+import unittest
+import json
 from api import app
 
-client = TestClient(app)
+class TestAPI(unittest.TestCase):
+    def setUp(self):
+        self.app = app.test_client()
+        self.app.testing = True
 
-def test_converter_numero_valido():
-    response = client.get("/converter/123")
-    assert response.status_code == 200
-    assert response.json() == {"extenso": "cento e vinte e três"}
+    def test_converter_numero_inteiro(self):
+        response = self.app.post('/converter',
+                               data=json.dumps({'numero': 42}),
+                               content_type='application/json')
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['extenso'], 'quarenta e dois')
 
-def test_converter_zero():
-    response = client.get("/converter/0")
-    assert response.status_code == 200
-    assert response.json() == {"extenso": "zero"}
+    def test_converter_numero_decimal(self):
+        response = self.app.post('/converter',
+                               data=json.dumps({'numero': 1.5}),
+                               content_type='application/json')
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['extenso'], 'um vírgula cinco')
 
-def test_converter_numero_negativo():
-    response = client.get("/converter/-1")
-    assert response.status_code == 400
-    assert "error" in response.json()["detail"]
+    def test_converter_numero_negativo(self):
+        response = self.app.post('/converter',
+                               data=json.dumps({'numero': -15}),
+                               content_type='application/json')
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['extenso'], 'menos quinze')
 
-def test_converter_numero_muito_grande():
-    response = client.get("/converter/1000000000")
-    assert response.status_code == 400
-    assert "error" in response.json()["detail"]
+    def test_erro_sem_numero(self):
+        response = self.app.post('/converter',
+                               data=json.dumps({}),
+                               content_type='application/json')
+        self.assertEqual(response.status_code, 400)
 
-def test_converter_entrada_invalida():
-    response = client.get("/converter/abc")
-    assert response.status_code == 422  # Erro de validação do FastAPI 
+    def test_erro_numero_invalido(self):
+        response = self.app.post('/converter',
+                               data=json.dumps({'numero': 'abc'}),
+                               content_type='application/json')
+        self.assertEqual(response.status_code, 400)
+
+if __name__ == '__main__':
+    unittest.main() 
